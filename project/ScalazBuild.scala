@@ -150,6 +150,7 @@ object ScalazBuild extends Build {
         case "2.8.1" => "1.8"
         case "2.9.1" | "2.9.2" => "1.9"
         case "2.9.3-RC1" | "2.10.0" => "1.10.0"
+        case "2.11.0-M3" => "1.10.0"
       }
       "org.scalacheck" %% "scalacheck" % version cross CrossVersion.full
     }
@@ -157,6 +158,7 @@ object ScalazBuild extends Build {
       val version = scalaVersion match {
         case "2.8.1" => "1.6.8"
         case "2.9.1" | "2.9.2" | "2.9.3-RC1" | "2.10.0" => "1.6.9"
+        case _ => "1.6.9"
       }
       "org.scala-tools.testing" %% "specs" % version % "test"
     }
@@ -165,8 +167,8 @@ object ScalazBuild extends Build {
   lazy val standardSettings = Defaults.defaultSettings ++ Seq(
     organization := "org.scalaz",
     version      := "6.0.4",
-    scalaVersion := "2.10.0",
-    crossScalaVersions := Seq("2.9.3-RC1", "2.9.2", "2.9.1", "2.8.1", "2.10.0"),
+    scalaVersion := "2.11.0-M3",
+    crossScalaVersions := Seq("2.9.3-RC1", "2.9.2", "2.9.1", "2.8.1", "2.10.0", "2.11.0-M3"),
     resolvers    ++= Seq(
       "snapshotsResolver" at "http://oss.sonatype.org/content/repositories/snapshots",
       "releasesResolver"  at "http://oss.sonatype.org/content/repositories/releases"

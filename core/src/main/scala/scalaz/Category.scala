@@ -30,7 +30,7 @@ trait GeneralizedCategory {
     f: B =>: C,
     g: A =>: B
   ): A =>: C
-  def *[UY<:Hom](that : GeneralizedCategory {type U=UY}) = Category.ProductCategory[U,UY](this,that)
+  //def *[UY<:Hom](that : GeneralizedCategory {type U=UY}) = Category.ProductCategory[U,UY](this,that)
 }
 
 trait GeneralizedGroupoid extends GeneralizedCategory { 
@@ -56,30 +56,33 @@ object Category {
    */
 
   /** Index for a product category */
-  sealed trait P[+IX, +IY] { type _1 = IX; type _2 = IY }
 
-  case class ProductCategory[UX <: Hom, UY <: Hom](
-    _1: GeneralizedCategory {type U = UX}, _2: GeneralizedCategory {type U = UY} 
-  ) extends GeneralizedCategory with Hom {
-    type _1 = _1.type
-    type _2 = _2.type
-    type L = P[UX#L, UY#L]
-    type H = P[UX#H, UY#H]
-    case class C[A >: L <: H, B >: L <: H](
-      _1: UX#C[A#_1, B#_1], _2: UY#C[A#_2, B#_2]
-    ) extends P[UX#C[A#_1, B#_1], UY#C[A#_2, B#_2]]
-    type U = ProductCategory[UX, UY]
+  sealed trait P[IX, IY] { type _1 = IX; type _2 = IY }
 
-    def id[A>:U#L<:U#H] = C(_1.id[A#_1],_2.id[A#_2])
-    def compose[A >: U#L <: U#H, B >: U#L <: U#H, C >: U#L <: U#H](
-      f: B =>: C, g: A =>: B
-    ) = C(_1.compose(f._1, g._1), _2.compose(f._2, g._2))
-  }
+  trait ProductCategory [UX <: Hom, UY <: Hom] extends GeneralizedCategory with Hom
+
+  // case class ProductCategory[UX <: Hom, UY <: Hom](
+  //   _1: GeneralizedCategory {type U = UX}, _2: GeneralizedCategory {type U = UY}
+  // ) extends GeneralizedCategory with Hom {
+  //   type _1 = _1.type
+  //   type _2 = _2.type
+  //   type L = P[UX#L, UY#L]
+  //   type H = P[UX#H, UY#H]
+  //   case class C[A >: L <: H, B >: L <: H](
+  //     _1: UX#C[A#_1, B#_1], _2: UY#C[A#_2, B#_2]
+  //   ) extends P[UX#C[A#_1, B#_1], UY#C[A#_2, B#_2]]
+  //   type U = ProductCategory[UX, UY]
+
+  //   def id[A>:U#L<:U#H] = C(_1.id[A#_1],_2.id[A#_2])
+  //   def compose[A >: U#L <: U#H, B >: U#L <: U#H, C >: U#L <: U#H](
+  //     f: B =>: C, g: A =>: B
+  //   ) = C(_1.compose(f._1, g._1), _2.compose(f._2, g._2))
+  // }
 
   implicit def productCategory[UX <: Hom, UY <: Hom](
     implicit x: GeneralizedCategory {type U=UX},
              y: GeneralizedCategory {type U=UY}
-  ) = ProductCategory[UX, UY](x, y)
+  ): ProductCategory[UX, UY] = ??? //= ProductCategory[UX, UY](x, y)
 
   sealed class MonoidCategory[M](
     implicit monoid : Monoid[M]

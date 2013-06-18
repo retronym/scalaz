@@ -49,13 +49,6 @@ abstract class StrategyLow {
     def apply[A](a: => A) = () => a
   }
 
-  /**
-   * A simple strategy that spawns a new thread for every evaluation.
-   */
-  implicit val Naive: Strategy = new Strategy {
-    import scala.concurrent.ops.future
-    def apply[A](a: => A) = future {a}
-  }
 
   /**
    * A strategy that evaluates its arguments using the pool of Swing worker threads.

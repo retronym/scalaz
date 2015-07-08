@@ -61,8 +61,7 @@ object build extends Build {
   lazy val standardSettings: Seq[Sett] = Defaults.defaultSettings ++ sbtrelease.ReleasePlugin.releaseSettings ++ Seq[Sett](
     organization := "org.scalaz",
 
-    scalaVersion := "2.10.5",
-    crossScalaVersions := Seq("2.9.3", "2.10.5", "2.11.6"),
+    scalaVersion := "2.11.7",
     resolvers ++= (if (scalaVersion.value.endsWith("-SNAPSHOT")) List(Opts.resolver.sonatypeSnapshots) else Nil),
     scalacOptions <++= (scalaVersion) map { sv =>
       val versionDepOpts =
@@ -74,7 +73,7 @@ object build extends Build {
           Seq("-feature", "-language:implicitConversions", "-language:higherKinds", "-language:existentials", "-language:postfixOps")
 
       // no generic signatures, see SI-7932 and #571
-      Seq("-unchecked", "-Yno-generic-signatures") ++ versionDepOpts
+      Seq("-unchecked", "-Yno-generic-signatures", "-Xexperimental", "-Ydelambdafy:method", "-Ybackend:GenBCode", "-target:jvm-1.8") ++ versionDepOpts
     },
 
     scalacOptions in (Compile, doc) <++= (baseDirectory in LocalProject("scalaz"), version) map { (bd, v) =>
@@ -224,6 +223,7 @@ object build extends Build {
           }
         else Nil
       },
+      libraryDependencies += "org.scala-lang.modules" %% "scala-java8-compat" % "0.5.0",
       sourceGenerators in Compile <+= buildInfo,
       buildInfoKeys := Seq[BuildInfoKey](version, scalaVersion),
       buildInfoPackage := "scalaz",
